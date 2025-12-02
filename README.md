@@ -46,19 +46,22 @@ Simple GitLab Community Edition deployment on AWS for testing and API integratio
    - After apply, note the nameservers from the output
    - Add NS records in parent domain pointing to these nameservers
 
-8. **Connect to the instance** (via AWS Systems Manager - no SSH keys needed):
-   ```bash
-   # Get the SSM connect command from output
-   terraform output ssm_connect_command
-   
-   # Run the command (example)
-   aws ssm start-session --target i-1234567890abcdef0
-   ```
+8. **Wait for GitLab to be ready** (~10-15 minutes):
+   - GitLab automatically configures itself on first boot
+   - SSL certificate is automatically obtained from Let's Encrypt
+   - You can check if configuration is complete:
+     ```bash
+     # Connect to instance
+     terraform output ssm_connect_command
+     
+     # Check if configuration is complete
+     ls -la /var/log/gitlab-configured
+     ```
 
-9. **Configure GitLab**:
-   - Edit `/etc/gitlab/gitlab.rb`
-   - Set domain and enable Let's Encrypt
-   - Run `sudo gitlab-ctl reconfigure`
+9. **Access GitLab**:
+   - Visit the GitLab URL from terraform output
+   - Login with username `root` and password = instance ID
+   - Get instance ID: `terraform output gitlab_instance_id`
 
 ## DNS Delegation
 
@@ -77,8 +80,9 @@ terraform output hosted_zone_nameservers
 - **EC2**: t3.large instance with GitLab official AMI
 - **Storage**: 35 GB root volume
 - **DNS**: Route53 hosted zone
-- **SSL**: Let's Encrypt (configured post-deployment)
+- **SSL**: Let's Encrypt (automatically configured via user data)
 - **Access**: AWS Systems Manager Session Manager (no SSH keys required)
+- **Configuration**: Fully automated via EC2 user data script
 
 ## Teardown
 

@@ -32,6 +32,26 @@ resource "aws_instance" "gitlab" {
   associate_public_ip_address = true
   iam_instance_profile        = aws_iam_instance_profile.gitlab.name
 
+  user_data = <<-EOF
+              #!/bin/bash
+              set -e
+              
+              # Wait for GitLab to be fully installed and running
+              until gitlab-ctl status > /dev/null 2>&1; do
+                echo "Waiting for GitLab to be ready..."
+                sleep 10
+              done
+              
+              # Configure external URL
+              sed -i "s|^external_url.*|external_url 'https://${var.domain_name}'|" /etc/gitlab/gitlab.rb
+              
+              # Reconfigure GitLab (this enables Let's Encrypt automatically for https URLs)
+              gitlab-ctl reconfigure
+              
+              # Mark configuration as complete
+              touch /var/log/gitlab-configured
+              EOF
+
   root_block_device {
     volume_size = var.root_volume_size
     volume_type = "gp3"
