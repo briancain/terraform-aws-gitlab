@@ -132,6 +132,12 @@ This Terraform configuration creates:
     - Login with username `root` and password = instance ID
     - Get instance ID: `terraform output gitlab_instance_id`
 
+11. **Change root password** (recommended):
+    - After logging in, click your avatar (top right) → Edit profile
+    - Left sidebar → Password
+    - Set a strong new password
+    - Save changes
+
 9. **Access GitLab**:
    - Visit the GitLab URL from terraform output
    - Login with username `root` and password = instance ID
