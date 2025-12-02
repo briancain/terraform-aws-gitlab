@@ -4,9 +4,17 @@ Simple GitLab Community Edition deployment on AWS for testing and API integratio
 
 ## Prerequisites
 
-1. AWS credentials configured with appropriate permissions
-2. AWS CLI installed
-3. Terraform >= 1.0 installed
+1. **Domain name** for your GitLab instance
+   - You can use an existing domain or subdomain
+   - Domain must be manageable via Route53 or have the ability to add NS records
+   - Examples: `gitlab.example.com` or `git.mycompany.com`
+
+2. AWS credentials configured with appropriate permissions
+   - Permissions needed: EC2, VPC, Route53, IAM, S3, DynamoDB, Systems Manager
+
+3. AWS CLI installed
+
+4. Terraform >= 1.0 installed
 
 ## Setup
 
