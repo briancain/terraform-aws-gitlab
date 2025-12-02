@@ -1,6 +1,56 @@
 # GitLab on AWS - Terraform
 
-Simple GitLab Community Edition deployment on AWS for testing and API integration.
+Terraform infrastructure code to deploy a self-hosted GitLab Community Edition (CE) instance on AWS using the official GitLab Omnibus AMI.
+
+## Overview
+
+This project provides a simple, cost-effective way to run your own GitLab instance on AWS for testing, development, or small team use. It deploys:
+
+- **GitLab Community Edition (CE)** - Free, open-source version with all core features
+- **GitLab Omnibus** - All-in-one package with GitLab, PostgreSQL, Redis, and Gitaly bundled
+- **Single EC2 instance** - Simple architecture, no complex clustering
+- **Automatic SSL** - Let's Encrypt certificate configured during setup
+- **Secure access** - AWS Systems Manager Session Manager (no SSH keys needed)
+
+Perfect for:
+- Testing GitLab features and integrations
+- Small development teams (< 100 users)
+- CI/CD pipeline development
+- Learning GitLab administration
+
+## What Gets Deployed
+
+This Terraform configuration creates:
+
+1. **Networking**
+   - VPC with public subnet in a single availability zone
+   - Internet Gateway for public internet access
+   - Route table with appropriate routing
+
+2. **Compute**
+   - EC2 instance (t3.large) running GitLab CE Omnibus
+   - 35 GB root volume for GitLab data
+   - IAM instance profile for Systems Manager access
+
+3. **DNS**
+   - Route53 hosted zone for your domain
+   - A record pointing to the GitLab instance
+
+4. **Security**
+   - Security group allowing HTTP (80), HTTPS (443), and SSH (22)
+   - IAM role with Systems Manager permissions
+
+5. **State Management**
+   - S3 bucket for Terraform state
+   - DynamoDB table for state locking
+
+**Total AWS Resources**: 12
+
+**Estimated Monthly Cost**: ~$70-80 USD
+- EC2 t3.large: ~$60/month
+- EBS 35GB: ~$3.50/month
+- Route53 hosted zone: $0.50/month
+- Data transfer: varies
 
 ## Prerequisites
 
