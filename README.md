@@ -15,41 +15,47 @@ Simple GitLab Community Edition deployment on AWS for testing and API integratio
    export AWS_PROFILE=your-profile-name
    ```
 
-2. **Initialize Terraform backend**:
+2. **Create terraform.tfvars**:
+   ```bash
+   cp terraform.tfvars.example terraform.tfvars
+   # Edit terraform.tfvars and set your domain_name
+   ```
+
+3. **Initialize Terraform backend**:
    ```bash
    ./init.sh
    ```
    This creates the S3 bucket, DynamoDB table, and generates `backend.tf`
 
-3. **Initialize Terraform**:
+4. **Initialize Terraform**:
    ```bash
    terraform init
    ```
 
-4. **Review the plan**:
+5. **Review the plan**:
    ```bash
    terraform plan
    ```
 
-5. **Apply the configuration**:
+6. **Apply the configuration**:
    ```bash
    terraform apply
    ```
 
-6. **Configure DNS delegation** (if using subdomain):
+7. **Configure DNS delegation** (if using subdomain):
    - After apply, note the nameservers from the output
    - Add NS records in parent domain pointing to these nameservers
 
-7. **Connect to the instance**:
+8. **Connect to the instance** (via AWS Systems Manager - no SSH keys needed):
    ```bash
    # Get the SSM connect command from output
    terraform output ssm_connect_command
    
-   # Or copy the command directly
-   aws ssm start-session --target <instance-id>
+   # Run the command (example)
+   aws ssm start-session --target i-1234567890abcdef0
    ```
 
-8. **Configure GitLab**:
+9. **Configure GitLab**:
    - Edit `/etc/gitlab/gitlab.rb`
    - Set domain and enable Let's Encrypt
    - Run `sudo gitlab-ctl reconfigure`
@@ -72,6 +78,7 @@ terraform output hosted_zone_nameservers
 - **Storage**: 35 GB root volume
 - **DNS**: Route53 hosted zone
 - **SSL**: Let's Encrypt (configured post-deployment)
+- **Access**: AWS Systems Manager Session Manager (no SSH keys required)
 
 ## Teardown
 
