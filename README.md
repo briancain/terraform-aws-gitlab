@@ -53,7 +53,7 @@ Simple GitLab Community Edition deployment on AWS for testing and API integratio
      ```bash
      # Connect to instance
      terraform output ssm_connect_command
-     
+
      # Check if configuration is complete
      ls -la /var/log/gitlab-configured
      ```
