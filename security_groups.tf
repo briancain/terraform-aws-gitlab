@@ -22,14 +22,7 @@ resource "aws_security_group" "gitlab" {
     description = "HTTPS"
   }
 
-  # SSH
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "SSH"
-  }
+  # SSH - Use AWS Systems Manager Session Manager instead
 
   # Outbound - allow all
   egress {
